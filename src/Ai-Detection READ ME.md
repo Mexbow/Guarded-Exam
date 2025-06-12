@@ -28,9 +28,10 @@ This project aims to detect whether a given piece of text is **written by a huma
 Place the extracted models in a folder structure like:
 
 
-/src
-├── model_w_gpt.pkl
-└── model_w_robeta_v1.pkl
+         -->/model_w_robeta_v1.pkl
+/src--|
+        -->/model_w_gpt.pkl
+
 
 ---
 
