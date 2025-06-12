@@ -1,0 +1,13 @@
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="text" placeholder="Enter text here..." rows="4" cols="50"></textarea>
+    <br>
+    <button type="submit">Analyze</button>
+</form>
+
+{% if result %}
+    <h3>Prediction Result:</h3>
+    <p>Human Probability: {{ result.human_prob }}%</p>
+    <p>AI Probability: {{ result.ai_prob }}%</p>
+    <p>Detected as: <strong>{{ "Human" if result.is_human else "AI" }}</strong></p>
+{% endif %}

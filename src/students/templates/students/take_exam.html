@@ -1,0 +1,661 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ exam.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="icon" href="/static/images/logobot.png"> 
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/take_exam.css' %}">
+
+</head>
+<body>
+    <header>
+        <div class="site-info">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+            <span class="site-name">Guarded Exam</span>
+        </div>
+        <div class="exam-status">
+            <div class="connection-status">
+                <div class="status-indicator"></div>
+                <span>Secure Connection</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="fullscreen-warning" id="fullscreen-warning">
+        ⚠️ Please return to full-screen mode to continue the exam. Penalty applied: -5 minutes
+    </div>
+
+    <div class="fullscreen-modal" id="fullscreen-modal">
+        <div class="fullscreen-modal-content">
+            <div class="warning-icon">🖥️</div>
+            <div class="warning-title">Fullscreen Required</div>
+            <div class="warning-message">
+                This exam must be taken in fullscreen mode for security purposes. 
+                Please click the button below to enter fullscreen mode.
+            </div>
+            <button class="fullscreen-btn" onclick="forceEnterFullscreen()">Enter Fullscreen</button>
+        </div>
+    </div>
+
+    <div class="penalty-counter" id="penalty-counter">
+        Violations: <span id="violation-count">0</span>
+    </div>
+
+    <div class="warning-overlay" id="warning-overlay">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-title">Exam Violation Detected</div>
+            <div class="warning-message" id="warning-message">
+                You have attempted to leave the exam environment. This action has been logged and a time penalty has been applied.
+            </div>
+            <button class="btn btn-danger" onclick="closeWarning()">I Understand</button>
+        </div>
+    </div>
+
+    <!-- Exam Container -->
+    <div class="container">
+        <div class="exam-header">
+            <h2 class="exam-title">{{ exam.title }}</h2>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div id="timer">
+            <div>Time Remaining</div>
+            <div id="countdown"></div>
+        </div>
+
+        <form id="exam-form" method="POST">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="question-container">
+                    <p class="question">{{ forloop.counter }}. {{ question.text }}</p>
+
+                    {% if question.question_type == "mcq" and question.options %}
+                        {% for option in question.options %}
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="q{{ question.id }}_{{ forloop.counter }}" name="answer_{{ question.id }}" value="{{ option }}" required>
+                                <label class="form-check-label" for="q{{ question.id }}_{{ forloop.counter }}">{{ option }}</label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <input type="text" name="answer_{{ question.id }}" class="form-control" placeholder="Type your answer here..." required>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+                Submit Exam
+            </button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 All Rights Reserved By Guarded Exam | Secure Examination System</p>
+    </footer>
+
+    <script>
+        // Global variables
+        let timeLeft = {{ exam.duration }} * 60;
+        let originalTimeLeft = timeLeft;
+        let isFullscreen = false;
+        let violationCount = 0;
+        let examStartTime = Date.now();
+        let lastPenaltyTime = 0;
+        let isExamActive = true;
+
+        // Improved fullscreen management
+        function enterFullscreen() {
+            const elem = document.documentElement;
+            const requestFullscreen = elem.requestFullscreen || 
+                                    elem.mozRequestFullScreen || 
+                                    elem.webkitRequestFullscreen || 
+                                    elem.msRequestFullscreen;
+            
+            if (requestFullscreen) {
+                requestFullscreen.call(elem).then(() => {
+                    console.log('Entered fullscreen successfully');
+                    isFullscreen = true;
+                }).catch(err => {
+                    console.warn('Could not enter fullscreen:', err);
+                    // Keep trying every 2 seconds until successful
+                    if (isExamActive) {
+                        setTimeout(enterFullscreen, 2000);
+                    }
+                });
+            } else {
+                console.warn('Fullscreen API not supported');
+            }
+        }
+
+        // Force fullscreen with retry mechanism
+        function forceFullscreen() {
+            if (!isFullscreen && isExamActive) {
+                enterFullscreen();
+                // Keep checking and forcing fullscreen
+                setTimeout(forceFullscreen, 10);
+            }
+        }
+
+        function showFullscreenModal() {
+            document.getElementById('fullscreen-modal').style.display = 'block';
+        }
+
+        function forceEnterFullscreen() {
+            enterFullscreen();
+            document.getElementById('fullscreen-modal').style.display = 'none';
+        }
+
+        function exitFullscreen() {
+            const exitFullscreen = document.exitFullscreen || 
+                                  document.mozCancelFullScreen || 
+                                  document.webkitExitFullscreen || 
+                                  document.msExitFullscreen;
+            
+            if (exitFullscreen) {
+                exitFullscreen.call(document).catch(err => {
+                    console.warn('Could not exit fullscreen:', err);
+                });
+            }
+        }
+
+        // Enhanced timer with better formatting
+        function updateTimer() {
+            if (!isExamActive) return;
+
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const progress = ((originalTimeLeft - timeLeft) / originalTimeLeft) * 100;
+            
+            document.getElementById("countdown").textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById("progress-bar").style.width = `${progress}%`;
+
+            const timerEl = document.getElementById("timer");
+            if (timeLeft <= 300) {
+                timerEl.style.background = "linear-gradient(135deg, #dc3545, #c82333)";
+                timerEl.style.animation = "timerPulse 1s ease-in-out infinite alternate";
+            } else if (timeLeft <= 600) {
+                timerEl.style.background = "linear-gradient(135deg, #ffc107, #e0a800)";
+            }
+
+            if (timeLeft <= 0) {
+                autoSubmitExam();
+            } else {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        function applyPenalty(reason) {
+            const now = Date.now();
+            if (now - lastPenaltyTime < 10) return; 
+            
+            lastPenaltyTime = now;
+            violationCount++;
+            timeLeft = Math.max(0, timeLeft - 300); // 5 minutes penalty
+            
+            document.getElementById("violation-count").textContent = violationCount;
+            document.getElementById("penalty-counter").style.display = "block";
+            
+            showWarning(reason);
+            
+            logViolation(reason);
+        }
+
+        function showWarning(message) {
+            document.getElementById("warning-message").textContent = message;
+            document.getElementById("warning-overlay").style.display = "block";
+        }
+
+        function closeWarning() {
+            document.getElementById("warning-overlay").style.display = "none";
+        }
+
+        function logViolation(reason) {
+            console.log(`Violation logged: ${reason} at ${new Date().toISOString()}`);
+        }
+
+        // Enhanced fullscreen detection
+        function handleFullscreenChange() {
+            const isCurrentlyFullscreen = !!(document.fullscreenElement || 
+                                           document.mozFullScreenElement || 
+                                           document.webkitFullscreenElement || 
+                                           document.msFullscreenElement);
+            
+            if (isFullscreen && !isCurrentlyFullscreen && isExamActive) {
+                document.getElementById("fullscreen-warning").style.display = "block";
+                applyPenalty("Exited fullscreen mode during exam");
+            } else if (isCurrentlyFullscreen) {
+                document.getElementById("fullscreen-warning").style.display = "none";
+            }
+            
+            isFullscreen = isCurrentlyFullscreen;
+        }
+
+        let visibilityTimeout = null;
+        function handleVisibilityChange() {
+            if (document.hidden && isExamActive) {
+                if (visibilityTimeout) {
+                    clearTimeout(visibilityTimeout);
+                }
+                
+                visibilityTimeout = setTimeout(() => {
+                    applyPenalty("Switched away from exam tab or minimized window");
+                    visibilityTimeout = null;
+                }, 500);
+            } else if (!document.hidden && visibilityTimeout) {
+                clearTimeout(visibilityTimeout);
+                visibilityTimeout = null;
+            }
+        }
+
+        function autoSubmitExam() {
+            isExamActive = false;
+            alert("Time's up! Your exam will be submitted automatically.");
+            document.getElementById("exam-form").submit();
+        }
+
+        function handleKeyboardEvents(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key !== 'Control' && e.key !== 'Meta') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        
+        let violationMessage = "Attempted to use forbidden key combination: ";
+        
+        switch(e.key.toLowerCase()) {
+            case 'c':
+                violationMessage += "Ctrl+C (Copy)";
+                break;
+            case 'v':
+                violationMessage += "Ctrl+V (Paste)";
+                break;
+            case 'x':
+                violationMessage += "Ctrl+X (Cut)";
+                break;
+            case 'a':
+                violationMessage += "Ctrl+A (Select All)";
+                break;
+            case 's':
+                violationMessage += "Ctrl+S (Save)";
+                break;
+            case 'p':
+                violationMessage += "Ctrl+P (Print)";
+                break;
+            case 'f':
+                violationMessage += "Ctrl+F (Find)";
+                break;
+            case 'h':
+                violationMessage += "Ctrl+H (Replace)";
+                break;
+            case 'u':
+                violationMessage += "Ctrl+U (View Source)";
+                break;
+            case 'r':
+                violationMessage += "Ctrl+R (Refresh)";
+                break;
+            case 'n':
+                violationMessage += "Ctrl+N (New Window)";
+                break;
+            case 't':
+                violationMessage += "Ctrl+T (New Tab)";
+                break;
+            case 'w':
+                violationMessage += "Ctrl+W (Close Tab)";
+                break;
+            case 'z':
+                violationMessage += "Ctrl+Z (Undo)";
+                break;
+            case 'y':
+                violationMessage += "Ctrl+Y (Redo)";
+                break;
+            case 'tab':
+                violationMessage += "Ctrl+Tab (Switch Tabs)";
+                break;
+            default:
+                violationMessage += `Ctrl+${e.key.toUpperCase()}`;
+        }
+        
+        applyPenalty(violationMessage);
+        return false;
+    }
+
+    if (e.altKey && e.key !== 'Alt') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        
+        let violationMessage = "Attempted to use forbidden Alt combination: ";
+        
+        switch(e.key.toLowerCase()) {
+            case 'tab':
+                violationMessage += "Alt+Tab (Switch Applications)";
+                break;
+            case 'f4':
+                violationMessage += "Alt+F4 (Close Window)";
+                break;
+            case 'enter':
+                violationMessage += "Alt+Enter (Properties)";
+                break;
+            case 'left':
+            case 'arrowleft':
+                violationMessage += "Alt+Left (Browser Back)";
+                break;
+            case 'right':
+            case 'arrowright':
+                violationMessage += "Alt+Right (Browser Forward)";
+                break;
+            case 'space':
+                violationMessage += "Alt+Space (Window Menu)";
+                break;
+            case 'd':
+                violationMessage += "Alt+D (Address Bar Focus)";
+                break;
+            case 'f':
+                violationMessage += "Alt+F (File Menu)";
+                break;
+            default:
+                violationMessage += `Alt+${e.key.toUpperCase()}`;
+        }
+        
+        applyPenalty(violationMessage);
+        return false;
+    }
+
+    if ((e.key === 'Meta' || e.key === 'OS') && e.code !== 'MetaLeft' && e.code !== 'MetaRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        applyPenalty("Attempted to use Windows key combination");
+        return false;
+    }
+
+    const forbiddenKeys = [
+        'F12', 'F11', 'F10', 'F9', 'F8', 'F7', 'F6', 'F5', 'F4', 'F3', 'F2', 'F1',
+        'PrintScreen'
+    ];
+    
+    if (e.ctrlKey && e.shiftKey && e.key !== 'Control' && e.key !== 'Shift') {
+        const forbiddenShiftCombos = ['I', 'J', 'C', 'K', 'Delete', 'Tab'];
+        if (forbiddenShiftCombos.includes(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            applyPenalty(`Attempted to use forbidden combination: Ctrl+Shift+${e.key}`);
+            return false;
+        }
+    }
+
+    if (forbiddenKeys.includes(e.key)) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        applyPenalty(`Attempted to use forbidden key: ${e.key}`);
+        return false;
+    }
+
+    if (e.key === 'Tab') {
+        if (e.ctrlKey || e.altKey) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            const modifier = e.ctrlKey ? 'Ctrl' : 'Alt';
+            applyPenalty(`Attempted to use ${modifier}+Tab for switching`);
+            return false;
+        }
+        return true;
+    }
+
+    if (e.key === 'Control' || e.key === 'Alt' || e.key === 'Shift' || e.key === 'Meta') {
+        return true;
+    }
+}
+
+let altPressed = false;
+let altTabAttempts = 0;
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Alt') {
+        altPressed = true;
+    }
+    
+    if (altPressed && e.key === 'Tab') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        altTabAttempts++;
+        applyPenalty(`Alt+Tab application switching blocked (Attempt #${altTabAttempts})`);
+        return false;
+    }
+}, true);
+
+document.addEventListener('keyup', function(e) {
+    if (e.key === 'Alt') {
+        altPressed = false;
+    }
+}, true);
+
+let focusLostTime = 0;
+let rapidFocusChanges = 0;
+
+window.addEventListener('blur', function() {
+    if (isExamActive) {
+        focusLostTime = Date.now();
+        rapidFocusChanges++;
+        
+        setTimeout(() => {
+            if (rapidFocusChanges > 0) {
+                rapidFocusChanges--;
+            }
+        }, 2000);
+        
+        if (rapidFocusChanges > 2) {
+            applyPenalty("Multiple rapid window focus changes detected - possible Alt+Tab usage");
+            rapidFocusChanges = 0; // Reset counter after penalty
+        }
+    }
+});
+
+window.addEventListener('focus', function() {
+    if (isExamActive && focusLostTime > 0) {
+        const focusRegainTime = Date.now();
+        const timeLost = focusRegainTime - focusLostTime;
+        
+        if (timeLost < 3000 && timeLost > 100) {
+            applyPenalty("Quick window switch detected - possible Alt+Tab usage");
+        }
+        
+        focusLostTime = 0;
+    }
+});
+
+        function preventCopyPaste(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            applyPenalty("Attempted to copy/paste through context menu");
+            return false;
+        }
+
+        function preventBackNavigation() {
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function(event) {
+                if (isExamActive) {
+                    history.pushState(null, null, location.href);
+                    alert('Navigation is disabled during the exam!');
+                }
+            });
+        }
+
+        function preventContextMenu(e) {
+            e.preventDefault();
+            applyPenalty("Attempted to open context menu");
+            return false;
+        }
+
+        function preventTextSelection(e) {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                return false;
+            }
+        }
+
+        function initializeExam() {
+            preventBackNavigation();
+            
+            enterFullscreen();
+            forceFullscreen();
+            
+            updateTimer();
+            
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('msfullscreenchange', handleFullscreenChange);
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            document.addEventListener('keydown', handleKeyboardEvents, true);
+            document.addEventListener('keyup', handleKeyboardEvents, true);  
+            document.addEventListener('keypress', handleKeyboardEvents, true);
+            window.addEventListener('keydown', function(e) {
+                if (e.altKey && e.key === 'Tab') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    applyPenalty("Alt+Tab application switching blocked");
+                    return false;
+                }
+            }, true);
+            
+            let lastFocusTime = Date.now();
+            window.addEventListener('blur', function() {
+                if (isExamActive) {
+                    const currentTime = Date.now();
+                    if (currentTime - lastFocusTime > 100) {
+                        applyPenalty("Window lost focus - possible Alt+Tab or application switch");
+                        lastFocusTime = currentTime;
+                    }
+                }
+            });
+            
+            window.addEventListener('focus', function() {
+                lastFocusTime = Date.now();
+            });
+            document.addEventListener('contextmenu', preventContextMenu);
+            document.addEventListener('selectstart', preventTextSelection);
+            document.addEventListener('mousedown', preventTextSelection);
+            document.addEventListener('copy', preventCopyPaste);
+            document.addEventListener('paste', preventCopyPaste);
+            document.addEventListener('cut', preventCopyPaste);
+            document.addEventListener('dragstart', e => {
+                e.preventDefault();
+                return false;
+            });
+            document.body.style.userSelect = 'none';
+            document.body.style.webkitUserSelect = 'none';
+            document.body.style.mozUserSelect = 'none';
+            document.body.style.msUserSelect = 'none';
+            const inputs = document.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(input => {
+                input.style.userSelect = 'text';
+                input.style.webkitUserSelect = 'text';
+                input.style.mozUserSelect = 'text';
+                input.style.msUserSelect = 'text';
+            });
+            
+            setTimeout(() => {
+                isFullscreen = !!(document.fullscreenElement || 
+                                document.mozFullScreenElement || 
+                                document.webkitFullscreenElement || 
+                                document.msFullscreenElement);
+                
+                if (!isFullscreen && isExamActive) {
+                    showFullscreenModal();
+                }
+            }, 300);
+        }
+
+        document.getElementById('exam-form').addEventListener('submit', function(e) {
+            if (!confirm('Are you sure you want to submit your exam? This action cannot be undone.')) {
+                e.preventDefault();
+                return false;
+            }
+            
+            isExamActive = false;
+            const violationInput = document.createElement('input');
+            violationInput.type = 'hidden';
+            violationInput.name = 'violation_count';
+            violationInput.value = violationCount;
+            this.appendChild(violationInput);
+            
+            if (window.history && window.history.pushState) {
+                window.history.replaceState(null, null, window.location.href);
+                window.history.pushState(null, null, window.location.href);
+            }
+        });
+
+        window.addEventListener('load', initializeExam);
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (isExamActive) {
+                const message = 'Are you sure you want to leave? Your exam progress may be lost.';
+                e.returnValue = message;
+                return message;
+            }
+        });
+
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || performance.navigation.type === 2) {
+                if (!isExamActive) {
+                    alert('You cannot return to the exam page.');
+                    window.location.replace('/');
+                }
+            }
+        });
+
+        document.addEventListener('mousedown', function(e) {
+            if (e.button === 1) { 
+                e.preventDefault();
+                applyPenalty("Attempted to use middle mouse button");
+            }
+        });
+
+        let devtools = {
+            open: false,
+            orientation: null
+        };
+
+        const threshold = 160;
+
+        setInterval(() => {
+            if (window.outerHeight - window.innerHeight > threshold || 
+                window.outerWidth - window.innerWidth > threshold) {
+                if (!devtools.open) {
+                    devtools.open = true;
+                    applyPenalty("Developer tools opened");
+                }
+            } else {
+                devtools.open = false;
+            }
+        }, 500);
+
+        // Disable console debugging
+        let element = new Image();
+        element.__defineGetter__('id', function() {
+            applyPenalty("Console debugging attempt detected");
+        });
+        
+        console.log('%cExam System', 'font-size: 50px; color: red;', element);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

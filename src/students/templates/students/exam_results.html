@@ -1,0 +1,18 @@
+<h2>Results for {{ attempt.student.full_name }} - {{ attempt.exam.title }}</h2>
+
+<table border="1">
+    <tr>
+        <th>Question</th>
+        <th>Your Answer</th>
+        <th>Correct</th>
+    </tr>
+    {% for answer in answers %}
+    <tr>
+        <td>{{ answer.question.text }}</td>
+        <td>{{ answer.student_answer }}</td>
+        <td>{% if answer.is_correct %} ✅ {% else %} ❌ {% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total Score: {{ attempt.score }}%</h3>

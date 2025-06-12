@@ -1,0 +1,311 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Enter Exam Code</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+    <style>
+        body {
+            background-color: #023c77;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .split-container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .logo-section {
+            flex: 1;
+            background: #007bff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .logo-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .form-section {
+            flex: 1;
+            padding: 30px;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .alert {
+            margin-top: 15px;
+        }
+        /* Rules Modal Styles */
+        .rules-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .rules-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .rules-header {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .rules-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .rules-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: flex-start;
+        }
+        .rules-list li:before {
+            content: "•";
+            color: #007bff;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: 10px;
+        }
+        .rules-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .penalty-badge {
+            background-color: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .alert-dismissible .btn-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+            padding: 1.25rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="split-container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo">
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h3 class="text-center mb-4">Enter Exam Code</h3>
+
+            <!-- Display Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                        <strong>
+                            {% if message.tags == 'error' %}
+                                <i class="bi bi-exclamation-triangle-fill"></i> Error:
+                            {% elif message.tags == 'success' %}
+                                <i class="bi bi-check-circle-fill"></i> Success:
+                            {% elif message.tags == 'warning' %}
+                                <i class="bi bi-exclamation-circle-fill"></i> Warning:
+                            {% else %}
+                                <i class="bi bi-info-circle-fill"></i> Info:
+                            {% endif %}
+                        </strong>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" id="exam-code-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="student_name" class="form-control" placeholder="Enter your full name" value="{{ request.POST.student_name|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Student ID</label>
+                    <input type="number" name="student_id" class="form-control" placeholder="Enter your student ID" value="{{ request.POST.student_id|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Exam Code</label>
+                    <input type="text" name="exam_code" class="form-control" placeholder="Enter exam code" value="{{ request.POST.exam_code|default:'' }}" required>
+                </div>
+
+                <button type="button" class="btn btn-primary" id="show-rules-btn">Show Exam Rules</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div class="rules-modal" id="rules-modal">
+        <div class="rules-content">
+            <div class="rules-header">
+                <h2 class="text-center">Exam Rules and Regulations</h2>
+                <p class="text-center text-muted">Please read all rules carefully before starting the exam</p>
+            </div>
+            
+            <ul class="rules-list">
+                <li>
+                    <strong>Device Usage:&nbsp; </strong>  Please use a desktop or a laptop for examination.
+                </li>
+                <li>
+                    <strong>Fullscreen Mode:</strong> The exam must be taken in fullscreen mode. Exiting fullscreen will result in penalties.
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>No Switching Tabs/Windows:</strong> Switching to other applications or browser tabs is strictly prohibited.
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>Keyboard Restrictions:</strong> The following keyboard shortcuts are blocked:
+                    <ul>
+                        <li>All Ctrl/Command + key combinations (Copy, Paste, Print, etc.)</li>
+                        <li>Alt + Tab (application switching)</li>
+                        <li>Function keys (F1-F12)</li>
+                        <li>Print Screen</li>
+                    </ul>
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>Right-Click Disabled::&nbsp;</strong> The context menu is disabled to prevent copy/paste actions.
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>Text Selection Restricted::&nbsp;</strong> You cannot select text outside of answer input fields.
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>Developer Tools Blocked:</strong> Any attempt to open developer tools will be detected and penalized.
+                    <span class="penalty-badge">5 min penalty</span>
+                </li>
+                <li>
+                    <strong>Time Penalties:&nbsp;</strong> Each violation will deduct 5 minutes from your remaining time.
+                </li>
+                <li>
+                    <strong>Multiple Violations::&nbsp;</strong> Repeated violations may result in automatic exam submission.
+                </li>
+                <li>
+                    <strong>No Navigation Away:&nbsp;</strong> You cannot go back or refresh the page during the exam.
+                </li>
+                <li>
+                    <strong>Monitoring:&nbsp;</strong> Your actions are being monitored for suspicious behavior.
+                </li>
+                <li>
+                    <strong>Technical Issues:&nbsp;</strong> Internet connectivity issues or computer problems are your responsibility.
+                </li>
+                <li>
+                    <strong>Time Management:&nbsp;</strong> The timer will continue running even if you experience technical issues.
+                </li>
+            </ul>
+            
+            <div class="rules-footer">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="agree-rules" required>
+                    <label class="form-check-label" for="agree-rules">
+                        I have read and agree to all the exam rules and regulations above
+                    </label>
+                </div>
+                <button type="button" class="btn btn-secondary me-2" id="cancel-exam-btn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="start-exam-btn" disabled>I Accept - Start Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Show rules modal when clicking the button
+        document.getElementById('show-rules-btn').addEventListener('click', function() {
+            // First validate the form
+            const form = document.getElementById('exam-code-form');
+            const inputs = form.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            
+            if (isValid) {
+                document.getElementById('rules-modal').style.display = 'block';
+            } else {
+                alert('Please fill in all required fields before viewing exam rules.');
+            }
+        });
+        
+        // Enable start exam button when checkbox is checked
+        document.getElementById('agree-rules').addEventListener('change', function() {
+            document.getElementById('start-exam-btn').disabled = !this.checked;
+        });
+        
+        // Start exam button handler
+        document.getElementById('start-exam-btn').addEventListener('click', function() {
+            document.getElementById('exam-code-form').submit();
+        });
+        
+        // Cancel button handler
+        document.getElementById('cancel-exam-btn').addEventListener('click', function() {
+            document.getElementById('rules-modal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside content
+        window.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('rules-modal')) {
+                document.getElementById('rules-modal').style.display = 'none';
+            }
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>
