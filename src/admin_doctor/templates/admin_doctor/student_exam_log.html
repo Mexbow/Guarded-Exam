@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Attempt Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/log.css' %}">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+</head>
+<header>
+    <div class="site-info">
+        <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+        <span class="site-name">Guarded Exam</span>
+    </div>
+    <div class="user-info">
+        <img src="{% static 'images/1.jpg' %}" alt="User Icon" class="user-icon">
+        <span class="user-name">Doctor</span>
+    </div>
+</header>
+<body>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">
+                <i class="bi bi-file-text"></i> Exam Attempt Details
+                <a href="{% url 'doctor_results' %}" class="btn btn-secondary btn-sm float-end">
+                    <i class="bi bi-arrow-left"></i> Back to Results
+                </a>
+            </h2>
+
+            <!-- Exam Summary -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Exam Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>Student:</strong> {{ attempt.student.full_name }}</p>
+                            <p><strong>Student ID:</strong> {{ attempt.student.student_id }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Exam:</strong> {{ attempt.exam.title }}</p>
+                            <p><strong>Submitted:</strong> {{ attempt.submitted_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Score:</strong> {{ attempt.score }} / {{ total_questions }}</p>
+                            <p><strong>Percentage:</strong> {% widthratio attempt.score total_questions 100 %}%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance and AI Summary -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Performance Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Correct Answers:</span>
+                                <span class="badge bg-success">{{ correct_answers }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Incorrect Answers:</span>
+                                <span class="badge bg-danger">{{ total_questions|add:"-correct_answers" }}</span>
+                            </div>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success" style="width: {% widthratio correct_answers total_questions 100 %}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-4 mt-md-0">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">AI Detection Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>AI Detected Answers:</span>
+                                <span class="badge bg-warning text-dark">{{ ai_detected_answers }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Human Answers:</span>
+                                <span class="badge bg-info">{{ total_questions|add:"-ai_detected_answers" }}</span>
+                            </div>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-warning" style="width: {% widthratio ai_detected_answers total_questions 100 %}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Detailed Question Analysis</h5>
+                </div>
+                <div class="card-body">
+                    {% for answer in answers %}
+                    <div class="question-analysis mb-4 p-3 border rounded {% if answer.is_correct %}border-success{% else %}border-danger{% endif %}">
+                        <div class="d-flex justify-content-between mb-2">
+                            <h5>Question {{ forloop.counter }}</h5>
+                            <div>
+                                <span class="badge {% if answer.is_correct %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% if answer.is_correct %}Correct{% else %}Incorrect{% endif %}
+                                </span>
+                                {% if answer.is_ai_generated %}
+                                <span class="badge bg-warning text-dark">AI Detected</span>
+                                {% else %}
+                                <span class="badge bg-info">Human</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <p class="mb-1"><strong>Question:</strong></p>
+                        <p class="ps-3">{{ answer.question.text }}</p>
+
+                        <p class="mb-1"><strong>Correct Answer:</strong></p>
+                        <p class="ps-3">{{ answer.question.answer }}</p>
+
+                        <p class="mb-1"><strong>Student Answer:</strong></p>
+                        <p class="ps-3">{{ answer.student_answer }}</p>
+
+                        {% if answer.question.question_type == 'text' %}
+                        <div class="mb-3">
+                            <p class="mb-1"><strong>AI Analysis:</strong></p>
+                            <div class="ps-3">
+                                {% if answer.ai_detection_result %}
+                                <pre>{{ answer.ai_detection_result }}</pre>
+                                {% else %}
+                                <p class="text-muted">No AI analysis available</p>
+                                {% endif %}
+                                {% if answer.ai_confidence_score %}
+                                <p>Confidence: {{ answer.ai_confidence_score|floatformat:2 }}</p>
+                                {% endif %}
+                                {% if answer.similarity_score %}
+                                <p>Similarity Score: {{ answer.similarity_score|floatformat:2 }}%</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#editScoreModal{{ answer.id }}">
+                                <i class="bi bi-pencil"></i> Edit Score
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Edit Score Modal -->
+                    <div class="modal fade" id="editScoreModal{{ answer.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="post" action="{% url 'update_answer_score' answer.id %}">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Answer Score</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Mark as Correct</label>
+                                            <select name="is_correct" class="form-select">
+                                                <option value="true" {% if answer.is_correct %}selected{% endif %}>Correct</option>
+                                                <option value="false" {% if not answer.is_correct %}selected{% endif %}>Incorrect</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Notes</label>
+                                            <textarea name="doctor_notes" class="form-control" rows="3">{{ answer.doctor_notes|default:'' }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS & Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

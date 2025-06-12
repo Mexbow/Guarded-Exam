@@ -1,0 +1,181 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Doctors</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Ensures the body takes the full height of the viewport */
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #343a40;
+            padding: 10px 20px;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+        }
+        .site-info {
+            display: flex;
+            align-items: center;
+        }
+        .site-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .site-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-icon {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-name {
+            font-size: 16px;
+        }
+        .sidebar {
+            height: calc(100vh - 60px);
+            width: 250px;
+            background-color: #23272b;
+            color: white;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            padding-top: 20px;
+            border-right: 3px solid #343a40;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #343a40;
+        }
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+        .content {
+            flex-grow: 1; /* Allows the content to take up remaining space */
+            margin-left: 270px;
+            margin-top: 60px;
+            padding: 30px;
+        }
+        .table thead {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            position: relative; /* Allows it to stick at the bottom of the page */
+        }
+        .btn {
+            border-radius: 5px;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="site-info">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+            <span class="site-name">Guarded Exam</span>
+        </div>
+        <div class="user-info">
+            <img src="{% static 'images/2.jpg' %}" alt="User Icon" class="user-icon">
+            <span class="user-name">Admin</span>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3 class="text-center text-white">Admin Panel</h3>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'add_doctor' %}">Add Doctor</a>
+        <a href="{% url 'show_all_doctors' %}">View All Doctors</a>
+        <a href="{% url 'login' %}">Logout</a>
+
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1 class="text-primary">List of Doctors</h1>
+        <a href="{% url 'add_doctor' %}" class="btn btn-success btn-sm mb-3">Add New Doctor</a>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.id }}</td>
+                        <td>{{ doctor.user.first_name }} {{ doctor.user.last_name }}</td>
+                        <td>{{ doctor.user.email }}</td>
+                        <td>{{ doctor.phone }}</td>
+                        <td>
+                            <a href="{% url 'edit_doctor' doctor.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'delete_doctor' doctor.id %}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No doctors found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 All Rights Reserved By Guarded Exam</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 60px; /* Adds space for the fixed header */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure full height */
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #343a40;
+            padding: 10px 20px;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+        }
+        .site-info {
+            display: flex;
+            align-items: center;
+        }
+        .site-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .site-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-icon {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-name {
+            font-size: 16px;
+        }
+        .dashboard-header {
+            text-align: center;
+            color: #0056b3;
+        }
+        .container {
+            flex: 1; /* Ensures it takes up remaining height */
+            width: 100%;
+            padding: 20px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centers content horizontally */
+        }
+        .card {
+            flex-grow: 1;
+            height: 80%;
+            min-height: 300px;
+            transition: all 0.3s ease-in-out;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: 40px;
+        }
+        .logout-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 80px; /* Adds space above the footer */
+        }
+        .logout-btn {
+            display: block;
+            width: 20%;
+            text-align: center;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+
+        /* Expand height as screen size increases */
+        @media (min-width: 992px) {
+            .card {
+                height: 50vh;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .card {
+                height: 70vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+     <!-- Header -->
+     <header>
+        <div class="site-info">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+            <span class="site-name">Guarded Exam</span>
+        </div>
+        <div class="user-info">
+            <img src="{% static 'images/1.jpg' %}" alt="User Icon" class="user-icon">
+            <span class="user-name">Doctor</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 class="dashboard-header mb-4">Doctor Dashboard</h2>
+        <p class="text-center text-muted">Welcome, Doctor! Manage your exams and other tasks with ease.</p>
+
+        <!-- Cards Section -->
+        <div class="row mb-5">
+            <div class="col-12 col-md-4 d-flex">
+                <div class="card border-primary w-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Make an Exam</h5>
+                        <p class="card-text">Create new exams for your students and manage them efficiently.</p>
+                        <a href="{% url 'create_exam' %}" class="btn btn-primary">Create Exam</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4 d-flex">
+                <div class="card border-success w-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">View Results</h5>
+                        <p class="card-text">Check the exam results and performance of your students.</p>
+                        <a href="{% url 'doctor_results' %}" class="btn btn-success">View Results</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4 d-flex">
+                <div class="card border-warning w-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Exams</h5>
+                        <p class="card-text">View the exams you created. And Preview the Results.</p>
+                        <a href="{% url 'view_exams' %}" class="btn btn-warning text-white">View Exam</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Button (Separate Section) -->
+    <div class="logout-container">
+        <a href="{% url 'login' %}" class="btn btn-danger logout-btn">Logout</a>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <p class="text-muted">&copy; 2024 Doctor Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

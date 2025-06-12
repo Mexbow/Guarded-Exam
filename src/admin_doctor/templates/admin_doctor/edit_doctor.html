@@ -1,0 +1,171 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f7fc;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #343a40;
+        padding: 10px 20px;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        z-index: 1000;
+    }
+    .site-info {
+        display: flex;
+        align-items: center;
+    }
+    .site-logo {
+        height: 40px;
+        margin-right: 10px;
+    }
+    .site-name {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .user-info {
+        display: flex;
+        align-items: center;
+    }
+    .user-icon {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .user-name {
+        font-size: 16px;
+    }
+    .sidebar {
+        height: calc(100vh - 60px);
+        width: 250px;
+        background-color: #23272b;
+        color: white;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        padding-top: 20px;
+        border-right: 3px solid #343a40;
+    }
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #343a40;
+    }
+    .sidebar a:hover {
+        background-color: #495057;
+    }
+    .content {
+        margin-left: 270px;
+        margin-top: 10px;
+        padding: 30px;
+    }
+    .container {
+        max-width: 100%;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+    h2 {
+        color: #007bff;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .form-control {
+        border-radius: 5px;
+    }
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+    .btn-primary {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    .footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<body>
+    <header>
+        <div class="site-info">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+            <span class="site-name">Guarded Exam</span>
+        </div>
+        <div class="user-info">
+            <img src="{% static 'images/2.jpg' %}" alt="User Icon" class="user-icon">
+            <span class="user-name">Admin</span>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3 class="text-center text-white">Admin Panel</h3>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'add_doctor' %}">Add Doctor</a>
+        <a href="{% url 'show_all_doctors' %}">View All Doctors</a>
+        <a href="{% url 'login' %}">Logout</a>
+
+    </div>
+<div class="content">
+    <div class="container mt-5">
+        <h2>Edit Doctor</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ doctor.user.first_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ doctor.user.last_name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ doctor.user.email }}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ doctor.phone }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'show_all_doctors' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

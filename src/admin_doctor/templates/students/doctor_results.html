@@ -1,0 +1,354 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Exam Results</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .question-analysis {
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .question-analysis:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #0d6efd;
+        }
+
+        .badge {
+            font-size: 0.85em;
+            padding: 0.5em 0.75em;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #343a40;
+            padding: 10px 20px;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 1000;
+        }
+        .site-info {
+            display: flex;
+            align-items: center;
+        }
+        .site-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .site-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-icon {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .user-name {
+            font-size: 16px;
+        }
+        .container {
+            margin-top: 80px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 1400px;
+            flex-grow: 1;
+            margin-bottom: 60px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+            position: relative;
+            margin-top: auto; 
+        }
+        .back-btn-container {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+        }
+        .back-btn-container .btn {
+            background-color: #6c757d;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: white;
+        }
+        .back-btn-container .btn:hover {
+            background-color: #5a6268;
+        }
+        .exam-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .exam-header {
+            background: linear-gradient(135deg, #0a1f36 0%, #13283f 100%);
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exam-header:hover {
+            background: linear-gradient(135deg, #13283f 0%, #1a3548 100%);
+        }
+        .exam-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .exam-stats {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .toggle-icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+        .exam-content {
+            display: none;
+            padding: 0;
+        }
+        .exam-content.show {
+            display: block;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+        .table thead th {
+            background-color: #495057;
+            color: white;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: bold;
+            padding: 12px;
+            border-top: none;
+        }
+        .table tbody td {
+            padding: 12px;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .score-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .score-excellent {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .score-good {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .score-average {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .score-poor {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        h2 {
+            color: #081f38;
+            margin-bottom: 20px;
+        }
+        hr {
+            border-top: 2px solid #13283f;
+            margin-bottom: 30px;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        .expand-all-btn {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="site-info">
+            <img src="{% static 'images/logobot_white.png' %}" alt="Site Logo" class="site-logo">
+            <span class="site-name">Guarded Exam</span>
+        </div>
+        <div class="user-info">
+            <img src="{% static 'images/1.jpg' %}" alt="User Icon" class="user-icon">
+            <span class="user-name">Doctor</span>
+        </div>
+    </header>
+
+    <!-- Back to Dashboard Button -->
+    <div class="back-btn-container">
+        <a href="{% url 'doctor_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h2 class="text-center">📜 Student Exam Results</h2>
+        <hr>
+        
+        <!-- Expand/Collapse All Button -->
+        <div class="expand-all-btn">
+            <button class="btn btn-outline-primary" onclick="toggleAllExams()">
+                <span id="toggle-text">Expand All</span>
+            </button>
+        </div>
+
+        <!-- Exam Results Grouped by Exam -->
+        {% regroup attempts by exam as exam_list %}
+        {% if exam_list %}
+            {% for exam_group in exam_list %}
+            <div class="exam-card">
+                <div class="exam-header" onclick="toggleExam('exam-{{ forloop.counter }}')">
+                    <div>
+                        <h5 class="exam-title">{{ exam_group.grouper.title }}</h5>
+                        <div class="exam-stats">
+                            {{ exam_group.list|length }} student{{ exam_group.list|length|pluralize }} took this exam
+                        </div>
+                    </div>
+                    <div class="toggle-icon" id="icon-exam-{{ forloop.counter }}">▼</div>
+                </div>
+                <div class="exam-content" id="exam-{{ forloop.counter }}">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Submitted At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attempt in exam_group.list %}
+                            <tr>
+                                <td>{{ attempt.student.full_name }}</td>
+                                <td>{{ attempt.student.student_id }}</td>
+                                <td>{{ attempt.score }} / {{ attempt.exam.questions.count }}</td>
+                                <td>
+                                    {% widthratio attempt.score attempt.exam.questions.count 100 as percentage %}
+                                    <span class="score-badge 
+                                        {% if percentage >= 90 %}score-excellent
+                                        {% elif percentage >= 75 %}score-good
+                                        {% elif percentage >= 60 %}score-average
+                                        {% else %}score-poor{% endif %}">
+                                        {{ percentage }}%
+                                    </span>
+                                </td>
+                                <td>{{ attempt.submitted_at|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'student_exam_log' attempt.id %}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        View Log
+                                    </a>
+                                </td>
+                            </tr>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <h4>No exam results found</h4>
+                <p>There are currently no student exam attempts to display.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="text-muted">&copy; 2024 Student Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function toggleExam(examId) {
+            const content = document.getElementById(examId);
+            const icon = document.getElementById('icon-' + examId);
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                icon.classList.remove('rotated');
+            } else {
+                content.classList.add('show');
+                icon.classList.add('rotated');
+            }
+        }
+
+        function toggleAllExams() {
+            const allContents = document.querySelectorAll('.exam-content');
+            const allIcons = document.querySelectorAll('.toggle-icon');
+            const toggleText = document.getElementById('toggle-text');
+            
+            const anyExpanded = Array.from(allContents).some(content => content.classList.contains('show'));
+            
+            if (anyExpanded) {
+                // Collapse all
+                allContents.forEach(content => content.classList.remove('show'));
+                allIcons.forEach(icon => icon.classList.remove('rotated'));
+                toggleText.textContent = 'Expand All';
+            } else {
+                // Expand all
+                allContents.forEach(content => content.classList.add('show'));
+                allIcons.forEach(icon => icon.classList.add('rotated'));
+                toggleText.textContent = 'Collapse All';
+            }
+        }
+    </script>
+</body>
+</html>
