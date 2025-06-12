@@ -1,0 +1,320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guarded Exam - Secure Online Testing Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="{% static 'images/logobot.png' %}" type="image/gif" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+              <img src="{% static 'images/logobot.png' %}" style="width: 60px;" alt="">
+               Guarded Exam
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="cta-buttons">
+                <a href="/students/" class="btn btn-outline">Take Exam</a>
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    <i class="fas fa-user"></i>
+                    Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>
+                    Secure <span class="highlight">AI-Powered</span><br>
+                    Examination Platform
+                </h1>
+                <p>
+                    Experience the future of online testing with advanced anti-cheating measures, 
+                    auto grading , and comprehensive integrity reporting.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{% url 'login' %}" class="btn btn-primary">
+                        Get Started
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#features" class="btn btn-outline">
+                        Learn More
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">98.2%</span>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Exams Secured</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Monitoring</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <i class="fas fa-eye fa-2x" style="color: var(--primary);"></i>
+                    <h4 style="color: white; margin: 1rem 0;">Automated Proctoring </h4>
+                </div>
+                <div class="floating-card">
+                    <i class="fas fa-brain fa-2x" style="color: var(--secondary);"></i>
+                    <h4 style="color: white; margin: 1rem 0;">AI Detection</h4>
+                </div>
+                <div class="floating-card">
+                    <i class="fas fa-chart-bar fa-2x" style="color: var(--accent);"></i>
+                    <h4 style="color: white; margin: 1rem 0;">Detailed Reports</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <div class="container">
+          <div class="section-header">
+              <h2>Advanced Security Features</h2>
+              <p>Our comprehensive suite of AI-powered tools ensures exam integrity and prevents cheating through multiple layers of security.</p>
+          </div>
+          <div class="features-grid">
+              <div class="feature-card">
+                  <div class="feature-icon">
+                      <i class="fas fa-robot"></i>
+                  </div>
+                  <h3>Automated Proctoring</h3>
+                  <p>Our AI proctoring system automatically monitors exams without human intervention, flagging suspicious behavior for review.</p>
+              </div>
+              <div class="feature-card">
+                  <div class="feature-icon">
+                    <i class="fas fa-desktop"></i>
+                  </div>
+                  <h3>Screen Recording Detection</h3>
+                  <p>Advanced detection of screen capture attempts,and unauthorized screenshots during examinations.</p>
+              </div>
+              <div class="feature-card">
+                  <div class="feature-icon">
+                      <i class="fas fa-search"></i>
+                  </div>
+                  <h3>Plagiarism Detection</h3>
+                  <p>Sophisticated algorithms analyze written responses against vast databases to detect similarities and ensure originality in submissions.</p>
+              </div>
+              <div class="feature-card">
+                  <div class="feature-icon">
+                      <i class="fas fa-chart-line"></i>
+                  </div>
+                  <h3>Comprehensive Analytics</h3>
+                  <p>Detailed performance metrics, integrity scores, and actionable insights for educators to improve examination quality and fairness.</p>
+              </div>
+              <div class="feature-card">
+                  <div class="feature-icon">
+                      <i class="fas fa-lock"></i>
+                  </div>
+                  <h3>Secure Environment</h3>
+                  <p>Browser lockdown, screen recording prevention, and network monitoring create an impenetrable examination environment.</p>
+              </div>
+              <div class="feature-card">
+                  <div class="feature-icon">
+                      <i class="fas fa-clock"></i>
+                  </div>
+                  <h3>Instant Alerts</h3>
+                  <p>Real-time notifications and automated responses to suspicious behavior ensure immediate intervention when needed.</p>
+              </div>
+          </div>
+      </div>
+  </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-container">
+                <div class="about-content">
+                    <h2>Transforming Digital Examinations</h2>
+                    <p>
+                        We're a passionate team of developers and AI specialists dedicated to revolutionizing online education. 
+                        By combining cutting-edge Natural Language Processing, computer vision, and machine learning technologies, 
+                        we've created a platform that ensures every examination is secure, fair, and free from academic misconduct.
+                    </p>
+                    <p>
+                        Our mission is to empower educational institutions with the tools they need to maintain academic integrity 
+                        in the digital age, while providing students with a seamless and trustworthy testing experience.
+                    </p>
+                    <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                </div>
+                <div class="about-visual">
+                    <div class="about-image">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Ready to secure your examinations? Contact us to learn more about our platform and how we can help maintain academic integrity at your institution.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Address</strong><br>
+                                Helwan University, Helwan, Egypt
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone</strong><br>
+                                +20 1212 123456
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong><br>
+                                guardedexam@gmail.com
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Tell us about your requirements" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Send Message
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h4>Guarded Exam</h4>
+                    <p>Securing the future of online education with advanced AI-powered examination monitoring and integrity solutions.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Development Team</h4>
+                    <ul>
+                        <li>Mahmoud Khaled Mahmoud</li>
+                        <li>Mohammed Khaled AbdulBadie</li>
+                        <li>Mohammed Khaled Ahmed</li>
+                        <li>Ali AbdRabo Ali</li>
+                        <li>Soliman Mohammed Mohammed</li>
+                        <li>Mahmoud Adel Ali</li>
+                        <li>Mahmoud Gamal AboSriee</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Stay updated with our latest features and security enhancements.</p>
+                    <form style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <input type="email" placeholder="Enter your email" style="flex: 1; padding: 0.75rem; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: white;">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Guarded Exam. All rights reserved. Developed by Helwan University Artificial Intelligence Team.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Form submission
+        document.querySelector('.contact-form form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // Newsletter subscription
+        document.querySelector('.footer-section form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for subscribing to our newsletter!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
