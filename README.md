@@ -1,5 +1,5 @@
 
-# 🛡️ Guarded Exam – AI-Powered Academic Integrity Platform
+# ![image](https://github.com/user-attachments/assets/349fce74-6724-476b-a943-a9bd67049060)Guarded Exam – AI-Powered Academic Integrity Platform
 
 **Guarded Exam** is a web-based exam submission system designed to enhance academic integrity using advanced Natural Language Processing (NLP). It automatically detects AI-generated answers and grades student submissions based on semantic similarity to model answers—without intrusive monitoring.
 
@@ -22,7 +22,7 @@
 - **Models**:
   - `RoBERTa-large`, `GPT-2` (AI Detection)
   - `DeBERTa-v3-zero-shot`, `DeBERTa Cross-Encoder` (Similarity Scoring)
-- **Database**: PostgreSQL
+- **Database**: SQLite
 - **Deployment**: Docker + KinD (Kubernetes in Docker)
 
 ---
@@ -47,25 +47,6 @@ kind load docker-image guarded-exam-api
 # Apply Kubernetes manifests
 kubectl apply -f k8s/
 ```
-
----
-
-## 📂 Project Structure
-
-```
-guarded-exam/
-├── backend/             # Django backend
-│   ├── ai_detection/    # AI detection logic (RoBERTa, GPT-2)
-│   ├── similarity/      # Similarity scoring logic (DeBERTa)
-│   └── api/             # REST API endpoints
-├── frontend/            # HTML/CSS submission form
-├── models/              # Saved model weights (optional)
-├── docker-compose.yml   # Local container orchestration
-├── k8s/                 # Kubernetes manifests
-└── README.md
-```
-
----
 
 ## 🧪 Testing & Results
 
@@ -102,3 +83,18 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 - Django REST Framework
 - Docker & Kubernetes community
 - Our supervisors at FCAI-HU
+
+## Images:
+  - Admin View:
+    ![image](https://github.com/user-attachments/assets/ee732e0c-d46a-4be4-87fd-42cb8545fd5e)
+    
+  - Teacher View:
+    ![image](https://github.com/user-attachments/assets/ab3c8446-0edf-4b7f-bdce-0c9668b89560)
+    ![image](https://github.com/user-attachments/assets/23229b99-2efd-465f-a316-1e410ea05200)
+    ![image](https://github.com/user-attachments/assets/e497e7ea-1de1-4b86-806c-5a3c3e805227)
+    ![image](https://github.com/user-attachments/assets/2bbdf312-bbf8-4b04-b0bb-19c5778d979b)
+
+  - Student View:
+    ![image](https://github.com/user-attachments/assets/3dd1680e-0d5c-481d-bc7d-0ddd1ec2e2bf)
+
+        
