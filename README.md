@@ -1,5 +1,5 @@
 
-# ![Guarded_Exam-removebg-preview](https://github.com/user-attachments/assets/08581c9b-43c2-4cc7-8d73-8703dc89d801) Guarded Exam – AI-Powered Academic Integrity Platform
+# ![Guarded_Exam-removebg-preview](https://github.com/user-attachments/assets/e0b53f04-513a-4cbe-bef8-e007082dd4da) Guarded Exam – AI-Powered Academic Integrity Platform
 
 **Guarded Exam** is a web-based exam submission system designed to enhance academic integrity using advanced Natural Language Processing (NLP). It automatically detects AI-generated answers and grades student submissions based on semantic similarity to model answers—without intrusive monitoring.
 
