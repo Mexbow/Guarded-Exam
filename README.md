@@ -84,17 +84,18 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 - Docker & Kubernetes community
 - Our supervisors at FCAI-HU
 
-### Images:
+### 📷 Images
+  - Front Page:
+    ![image](https://github.com/user-attachments/assets/2a8a1b41-e738-4037-a2d8-f5c6fbb54f85)
   - Admin View:
     ![image](https://github.com/user-attachments/assets/ee732e0c-d46a-4be4-87fd-42cb8545fd5e)
-    
   - Teacher View:
     ![image](https://github.com/user-attachments/assets/ab3c8446-0edf-4b7f-bdce-0c9668b89560)
     ![image](https://github.com/user-attachments/assets/23229b99-2efd-465f-a316-1e410ea05200)
     ![image](https://github.com/user-attachments/assets/e497e7ea-1de1-4b86-806c-5a3c3e805227)
     ![image](https://github.com/user-attachments/assets/2bbdf312-bbf8-4b04-b0bb-19c5778d979b)
-
   - Student View:
+    ![image](https://github.com/user-attachments/assets/24d6bfb8-04a2-4183-a099-cc55fcd6ec85)
     ![image](https://github.com/user-attachments/assets/3dd1680e-0d5c-481d-bc7d-0ddd1ec2e2bf)
 
         
