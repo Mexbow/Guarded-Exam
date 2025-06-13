@@ -1,4 +1,4 @@
-<img align="right" width="200" height="200" src="https://github.com/user-attachments/assets/3e747d37-7668-44e5-b819-9eb14780f669">
+<img align="right" width="130" height="130" src="https://github.com/user-attachments/assets/3e747d37-7668-44e5-b819-9eb14780f669">
 
 # Guarded Exam – AI-Powered Plagiarism Detection & Auto-Grading
 
