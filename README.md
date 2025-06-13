@@ -52,8 +52,9 @@ kubectl apply -f k8s/
 | Module          | Metric        | Score     |
 |----------------|---------------|-----------|
 | AI Detection    | Accuracy      | 98.8%     |
-| Similarity Model| F1-Score      | 89.7%     |
-| False Positives | AI Detection  | < 2%      |
+| Similarity Model| Accuracy      | 93.0%     |
+| False Positives | AI Detection  | < 3%      |
+| False Positives | Similarity Model  | < 10%      |
 
 All models were fine-tuned on large-scale datasets such as **AI vs Human Text**, **Quora Question Pairs**, and **SciTLDR**.
 
