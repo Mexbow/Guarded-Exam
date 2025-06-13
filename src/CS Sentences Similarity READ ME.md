@@ -122,6 +122,7 @@ This project is open for **research and educational** purposes only. If using th
 ```bash
 pip install datasets pandas scikit-learn matplotlib sentence-transformers
 
+---
 
 # 🧪 Alternative Label Transformation (Under Evaluation)
 
