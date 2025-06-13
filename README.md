@@ -31,7 +31,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/guarded-exam.git
+git clone https://github.com/Mexbow/Guarded-Exam.git
 cd guarded-exam
 
 # Build and start containers
