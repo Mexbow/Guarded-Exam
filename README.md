@@ -16,7 +16,7 @@
 
 ### 🧱 Architecture
 
-- **Backend**: Django + Django REST Framework  
+- **Backend**: Django
 - **Frontend**: HTML/CSS  
 - **Models**:
   - `RoBERTa-large`, `GPT-2` (AI Detection)
