@@ -123,33 +123,54 @@ This project is open for **research and educational** purposes only. If using th
 pip install datasets pandas scikit-learn matplotlib sentence-transformers
 
 
+🧪 Alternative Label Transformation (Under Evaluation)
+This experiment explores a new distribution strategy for ROUGE similarity scores used as regression targets. Instead of using raw ROUGE scores, we apply a combination of Yeo-Johnson transformation followed by Min-Max scaling to normalize the labels to the range [0, 1].
 
+📊 Why Use This?
+Original ROUGE scores are skewed, making them less ideal for regression tasks.
 
-# Alternative Label Transformation (Under Evaluation)
+Yeo-Johnson transformation improves normality of the distribution.
 
-This experiment explores a new distribution strategy for ROUGE similarity scores used as regression targets. Instead of raw ROUGE scores, we apply Yeo-Johnson transformation followed by Min-Max scaling.
+MinMaxScaler ensures output aligns with the model’s sigmoid activation (range [0, 1]).
 
-## Transformation Process
-
-### Why Use This?
-- Original ROUGE scores were skewed and not ideal for regression
-- Yeo-Johnson helps make the distribution more Gaussian-like
-- MinMaxScaler ensures scores align with model's sigmoid output (range: [0, 1])
-
-### Implementation Code
-```python
+🧬 Transformation Code
+python
+Copy
+Edit
 from sklearn.preprocessing import PowerTransformer, MinMaxScaler
 
 labels = df['label'].values.reshape(-1, 1)
 
-# Step 1: Yeo-Johnson transformation
+# Step 1: Apply Yeo-Johnson transformation
 pt = PowerTransformer(method='yeo-johnson', standardize=False)
 labels_yeojohnson = pt.fit_transform(labels)
 
-# Step 2: Min-Max normalization
+# Step 2: Normalize to [0, 1]
 scaler = MinMaxScaler()
 labels_scaled = scaler.fit_transform(labels_yeojohnson)
 
-# Assign back to DataFrame
+# Assign transformed values back to the DataFrame
 df['label_transformed'] = labels_scaled
+✅ Evaluation: Classification from Regression
+Although the model is trained as a regressor, we evaluate its ability to distinguish relevant sentence pairs using a threshold-based classification.
 
+🔹 Threshold Rule
+Prediction > 0.6 → Positive Match
+
+Prediction ≤ 0.6 → Negative Match
+
+📈 Evaluation Metrics
+text
+Copy
+Edit
+=== Evaluation Metrics ===
+Accuracy : 0.9167
+Precision: 0.9412
+Recall   : 0.8000
+F1 Score : 0.8649
+These results demonstrate strong alignment between the regression model’s outputs and a binary classification perspective.
+
+📂 Notes
+This approach is still under evaluation.
+
+May be integrated in future versions if performance improvements hold consistently.
