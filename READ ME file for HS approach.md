@@ -162,13 +162,6 @@ ensemble_score = sum(weights[i] * scores[model_keys[i]] for i in range(len(model
 - RoBERTa: Robustly Optimized BERT Pretraining Approach
 - T5: Text-to-Text Transfer Transformer
 
-## 🤝 Contributing
-
-Feel free to contribute by:
-- Extending to larger datasets
-- Adding new similarity models
-- Implementing other optimization algorithms
-- Improving memory efficiency
 
 ---
 
