@@ -28,6 +28,7 @@ The objective is to predict a **ROUGE-L similarity score** between a source sent
   - `target`: Human-written TLDRs (single or multiple)
   - `rouge_scores`: ROUGE-L score between each source sentence and TLDR
 
+
 The dataset was cleaned, filtered, and converted into sentence pairs suitable for regression training and evaluation.
 
 ---
@@ -40,7 +41,9 @@ Model and training notebook are available at the following Google Drive link:
 
 Place the extracted contents in a folder structure like:
 
-
+/src/
+├── model-4-isa.ipynb
+├── Model4.rar
 ---
 
 ## 📊 Performance
@@ -94,3 +97,24 @@ Place the extracted contents in a folder structure like:
 This project is open for **research and educational** purposes only. If using the fine-tuned model or methodology in your work, please cite appropriately.
 
 ---
+
+
+### STSB-RoBERTa-Large Model
+
+- [cross-encoder/stsb-roberta-large](https://huggingface.co/cross-encoder/stsb-roberta-large) by the [Sentence-Transformers team](https://www.sbert.net/)
+- No specific paper, but based on RoBERTa ([Liu et al., 2019](https://arxiv.org/abs/1907.11692)) and STSB dataset
+
+---
+
+## 🧠 Authors
+
+- 🔬 Soliman Khalil  
+- 🤖 Powered by [Hugging Face](https://huggingface.co) and [Sentence Transformers](https://www.sbert.net/)
+
+---
+
+## 🛠 Requirements
+
+```bash
+pip install datasets pandas scikit-learn matplotlib sentence-transformers
+
