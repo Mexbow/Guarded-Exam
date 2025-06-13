@@ -119,12 +119,12 @@ This project is open for **research and educational** purposes only. If using th
 
 ## 🛠 Requirements
 
-```bash
+
 pip install datasets pandas scikit-learn matplotlib sentence-transformers
 
 ---
 
-# 🧪 Alternative Label Transformation (Under Evaluation)
+### 🧪 Alternative Label Transformation (Under Evaluation)
 
 This experiment explores a new distribution strategy for ROUGE similarity scores used as regression targets. Instead of using raw ROUGE scores, we apply a combination of **Yeo-Johnson transformation** followed by **Min-Max scaling** to normalize the labels to the range [0, 1].
 
