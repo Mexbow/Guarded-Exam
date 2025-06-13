@@ -31,6 +31,10 @@ The objective is to predict a **ROUGE-L similarity score** between a source sent
 
 The dataset was cleaned, filtered, and converted into sentence pairs suitable for regression training and evaluation.
 
+The number of extracted trining exmaples for fine-tune after extraction is (Total pairs processed: 13236).
+
+The evaluation examples are from the test split and total examples are 619.
+
 ---
 
 ## 🔗 Download Fine-Tuned Model & Notebook
