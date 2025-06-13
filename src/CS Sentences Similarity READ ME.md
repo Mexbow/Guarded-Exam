@@ -122,3 +122,34 @@ This project is open for **research and educational** purposes only. If using th
 ```bash
 pip install datasets pandas scikit-learn matplotlib sentence-transformers
 
+
+
+
+# Alternative Label Transformation (Under Evaluation)
+
+This experiment explores a new distribution strategy for ROUGE similarity scores used as regression targets. Instead of raw ROUGE scores, we apply Yeo-Johnson transformation followed by Min-Max scaling.
+
+## Transformation Process
+
+### Why Use This?
+- Original ROUGE scores were skewed and not ideal for regression
+- Yeo-Johnson helps make the distribution more Gaussian-like
+- MinMaxScaler ensures scores align with model's sigmoid output (range: [0, 1])
+
+### Implementation Code
+```python
+from sklearn.preprocessing import PowerTransformer, MinMaxScaler
+
+labels = df['label'].values.reshape(-1, 1)
+
+# Step 1: Yeo-Johnson transformation
+pt = PowerTransformer(method='yeo-johnson', standardize=False)
+labels_yeojohnson = pt.fit_transform(labels)
+
+# Step 2: Min-Max normalization
+scaler = MinMaxScaler()
+labels_scaled = scaler.fit_transform(labels_yeojohnson)
+
+# Assign back to DataFrame
+df['label_transformed'] = labels_scaled
+
