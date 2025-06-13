@@ -1,5 +1,5 @@
 
-# Guarded Exam – AI-Powered Plagiarism Detection & Auto-Grading<img align="right" width="220" height="220" src="https://github.com/user-attachments/assets/3e747d37-7668-44e5-b819-9eb14780f669">
+# Guarded Exam – AI-Powered Plagiarism Detection & Auto-Grading<img align="right" width="250" height="250" src="https://github.com/user-attachments/assets/3e747d37-7668-44e5-b819-9eb14780f669">
 
 **Guarded Exam** is a web-based exam submission system designed to enhance academic integrity using advanced Natural Language Processing (NLP). It automatically detects AI-generated answers and grades student submissions based on semantic similarity to model answers—without intrusive monitoring.
 
