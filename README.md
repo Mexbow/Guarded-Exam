@@ -1,11 +1,10 @@
 
-# ![Guarded_Exam-removebg-preview](https://github.com/user-attachments/assets/e0b53f04-513a-4cbe-bef8-e007082dd4da) Guarded Exam – AI-Powered Academic Integrity Platform
+# Guarded Exam – AI-Powered Academic Integrity Platform        <img align="right" width="500" height="500" top="-2px" src="https://github.com/user-attachments/assets/3e747d37-7668-44e5-b819-9eb14780f669">
 
 **Guarded Exam** is a web-based exam submission system designed to enhance academic integrity using advanced Natural Language Processing (NLP). It automatically detects AI-generated answers and grades student submissions based on semantic similarity to model answers—without intrusive monitoring.
 
 ---
-
-## 🚀 Features
+### 🚀 Features
 
 - ✍️ **Exam Form Interface** – Simple, secure web form for student answers.
 - 🤖 **AI Detection Module** – Identifies GPT-like AI-written content using fine-tuned transformer models.
@@ -15,7 +14,7 @@
 
 ---
 
-## 🧱 Architecture
+### 🧱 Architecture
 
 - **Backend**: Django + Django REST Framework  
 - **Frontend**: HTML/CSS  
@@ -27,7 +26,7 @@
 
 ---
 
-## 🛠️ Installation
+### 🛠️ Installation
 
 ```bash
 # Clone the repository
@@ -60,7 +59,7 @@ All models were fine-tuned on large-scale datasets such as **AI vs Human Text**,
 
 ---
 
-## 📦 Datasets Used
+### 📦 Datasets Used
 
 - AI vs Human Text (Kaggle)
 - DAIGT-v2 Dataset
@@ -71,20 +70,20 @@ All models were fine-tuned on large-scale datasets such as **AI vs Human Text**,
 
 ---
 
-## 📜 License
+### 📜 License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
 
 ---
 
-## 🙏 Acknowledgements
+### 🙏 Acknowledgements
 
 - Hugging Face Transformers
 - Django REST Framework
 - Docker & Kubernetes community
 - Our supervisors at FCAI-HU
 
-## Images:
+### Images:
   - Admin View:
     ![image](https://github.com/user-attachments/assets/ee732e0c-d46a-4be4-87fd-42cb8545fd5e)
     
