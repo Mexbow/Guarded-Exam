@@ -20,7 +20,7 @@
 - **Backend**: Django
 - **Frontend**: HTML/CSS  
 - **Models**:
-  - `RoBERTa-large`, `GPT-2` (AI Detection)
+  - `RoBERTa-large OpenAI Detecor`, `GPT-2` (AI Detection)
   - `DeBERTa-v3-zero-shot`, `DeBERTa Cross-Encoder` (Similarity Scoring)
 - **Database**: SQLite
 - **Deployment**: Docker + KinD (Kubernetes in Docker)
