@@ -113,13 +113,6 @@ Due to computational constraints:
 - GPU memory clearing between batches
 - Only 1,200 out of 1,379 samples used
 
-## 📊 Visualization
-
-The code generates two key visualizations:
-
-1. **Harmony Search Convergence**: Shows fitness evolution across iterations for each batch
-2. **Best Objective Evolution**: Tracks the best MAE across different batches
-
 ## 🚧 Limitations
 
 1. **Memory Constraints**: Only ~87% of the dataset used due to computational limitations
