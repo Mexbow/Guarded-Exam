@@ -10,7 +10,7 @@ We use a state-of-the-art transformer-based **DeBERTa-v3-Large** model fine-tune
 ## 🧠 Model Used
 
 ### `nli-deberta-v3-large` (Cross-Encoder)
-- **Source**: [`cross-encoder/nli-deberta-v3-large`](https://huggingface.co/cross-encoder/nli-deberta-v3-large) from Hugging Face
+- **Source**: [`cross-encoder/nli-deberta-v3-large`](https://huggingface.co/cross-encoder/nli-deberta-v3-large) from Hugging Face  
 - **Task**: Binary Classification  
   - `0 = Not Duplicate`  
   - `1 = Duplicate / Semantically Similar`
@@ -19,6 +19,16 @@ We use a state-of-the-art transformer-based **DeBERTa-v3-Large** model fine-tune
   - `AdamW` optimizer  
   - Linear warm-up scheduler  
   - `CrossEntropyLoss`
+
+---
+
+## 📦 Download Fine-Tuned Model
+
+| Model Weights | Download Link |
+|---------------|----------------|
+| Best Cross-Encoder (`.pt` format) | [Download from Google Drive](https://drive.google.com/file/d/1GPF37eJZ7gGVVqOQ7XwGVduEBrXVOs75/view?usp=drive_link) |
+
+> Place the downloaded weights file in your project folder under `/models/` or modify the notebook path accordingly.
 
 ---
 
