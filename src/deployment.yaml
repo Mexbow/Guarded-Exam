@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guarded-exam
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: guarded-exam
+  template:
+    metadata:
+      labels:
+        app: guarded-exam
+    spec:
+      containers:
+      - name: guarded-exam
+        image: gaurded-exam:final-v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+      volumes:
+      - name: guarded-exam-storage
+        persistentVolumeClaim:
+          claimName: guarded-exam-pvc
+
+
+

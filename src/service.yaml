@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: guarded-exam-service
+  namespace: default
+spec:
+  selector:
+    app: guarded-exam
+  type: NodePort
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30007
+      protocol: TCP
+
