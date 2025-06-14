@@ -1,4 +1,4 @@
-# 🤖 Best Cross-Encoder for Sentence Pair Classification
+# 🤖 Cross-Encoder for Sentence Pair Classification
 
 This project focuses on detecting the relationship between sentence pairs using a fine-tuned **Cross-Encoder** model.  
 The architecture takes both sentences as a single input and directly predicts a similarity label — achieving high accuracy for tasks like **paraphrase detection** and **semantic matching**.
