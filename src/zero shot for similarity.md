@@ -1,4 +1,4 @@
-# 🧠 Best Zero-Shot Text Classifier
+# 🧠 Zero-Shot Text Classifier
 
 This project focuses on **zero-shot text classification** using a custom fine-tuned transformer model.  
 The model is capable of predicting the most suitable label for a given text without requiring task-specific training data.
@@ -24,7 +24,7 @@ Ideal for use cases such as:
 
 | Model Weights | Download Link |
 |---------------|----------------|
-| Best Zero-Shot Model (`.pt` or `.pkl`) | [Download from Google Drive](https://drive.google.com/file/d/1NA0t6rNjGBs5c8WGPnM9AduRnJa8gmaW/view?usp=drive_link) |
+| Zero-Shot Model (`.pt` or `.pkl`) | [Download from Google Drive](https://drive.google.com/file/d/1NA0t6rNjGBs5c8WGPnM9AduRnJa8gmaW/view?usp=drive_link) |
 
 > After downloading, place the model file in your project directory, e.g. `/models/`.
 
