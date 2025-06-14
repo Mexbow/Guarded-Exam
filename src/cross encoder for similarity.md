@@ -26,7 +26,7 @@ We use a state-of-the-art transformer-based **DeBERTa-v3-Large** model fine-tune
 
 | Model Weights | Download Link |
 |---------------|----------------|
-| Best Cross-Encoder (`.pt` format) | [Download from Google Drive](https://drive.google.com/file/d/1GPF37eJZ7gGVVqOQ7XwGVduEBrXVOs75/view?usp=drive_link) |
+| Cross-Encoder (`.pt` format) | [Download from Google Drive](https://drive.google.com/file/d/1GPF37eJZ7gGVVqOQ7XwGVduEBrXVOs75/view?usp=drive_link) |
 
 > Place the downloaded weights file in your project folder under `/models/` or modify the notebook path accordingly.
 
